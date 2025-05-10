@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Sancion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Sanciones</h2>
+
+<form method="post" action="@Url.Action("Sancion", "Sancion")">
+ 
+    <div class=" panel panel_primary">
+        <div class="panel-heading">
+            <label> Sanciones&nbsp; </label>
+            <input type="text" id="idSanction" placeholder="Buscar por ID Sancion" style="color:black" />
+            <button type="submit" style=" color:black" class="btn btn-default">Buscar </button>
+            <button class="btn btn-success">Nuevo</button>
+        </div>
+        <table class=" table-responsive" border="1" style=" color:black">
+            <thead>
+                <tr>
+                    <td><b>sanction_id</b></td>
+                    <td><b>description</b></td>
+                    <td><b>sanction_type</b></td>
+                    <td><b>cost</b></td>
+                    <td><b>created_at</b></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Tables.Count > 0)
+                {
+                    if (Model.Tables[0].Rows.Count > 0)
+                    {
+                        for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                        {
+                            <tr aling ="center">
+                                <td class=" active">@Model.Tables[0].Rows[x]["sanction_id"].Tostring()</td>
+                                <td class=" active">@Model.Tables[0].Rows[x]["description"].Tostring()</td>
+                                <td class=" active">@Model.Tables[0].Rows[x]["sanction_type"].Tostring()</td>
+                                <td class=" active">@Model.Tables[0].Rows[x]["cost"].Tostring()</td>
+                                <td class=" active">@Model.Tables[0].Rows[x]["created_at"].Tostring()</td>
+                                <td> <button type="button" class="btn btn-warning">Actualizar</button></td>
+                                <td> <button type="button" class="btn btn-danger">Eliminar</button></td>
+                            </tr>
+}
+
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+</form>
+
