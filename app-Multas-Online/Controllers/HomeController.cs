@@ -26,5 +26,6 @@ namespace app_Multas_Online.Controllers
 
             return View();
         }
+
     }
 }

@@ -7,41 +7,39 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
+using static app_Multas_Online.Models.csEstructuraAgente;
 using static app_Multas_Online.Models.csEstructuraSancion;
 
 namespace app_Multas_Online.Controllers
 {
-    public class sancionController : Controller
+    public class trafficOfficerController : Controller
     {
-        // GET: sancion
+        // GET: TrafficOfficer
         public ActionResult Index()
         {
             return View();
         }
-
-        public ActionResult Sancion(string idSanction)
+        public ActionResult Agente(string officer_id)
         {
             DataSet dsi = new DataSet();
             var url = "";
-            if (idSanction == null)
-                url = $"https://localhost:44388/rest/api/getSanctions";
+            if (officer_id == null)
+                url = $"https://localhost:44388/rest/api/getTrafficOfficers";
             else
-                url = $"https://localhost:44388/rest/api/getSanctionById?sanction_id=" + idSanction;
+                url = $"https://localhost:44388/rest/api/getTrafficOfficerById?officer_id=" + officer_id;
 
-            // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
 
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.ContentType = "application/json";  // también corriges el typo aquí
+            request.ContentType = "application/json";
             request.Accept = "application/json";
             string responseBody;
-
-
 
             try
             {
@@ -68,24 +66,29 @@ namespace app_Multas_Online.Controllers
 
             return View(dsi);
         }
-        public ActionResult newSanction()
+
+        // GET: TrafficOfficer/New
+        public ActionResult New()
         {
             return View();
         }
 
+        // POST: TrafficOfficer/Guardar
+        [HttpPost]
         public ActionResult Guardar(FormCollection formCollection)
         {
+            requestTrafficOfficer insertar = new requestTrafficOfficer();
+            
             string json, resultJson;
             byte[] reqString, restByte;
 
-            requestSanction insertar = new requestSanction();
-            insertar.description = formCollection["description"];
-            insertar.sanction_type = formCollection["sanction_type"];
-            insertar.cost = Convert.ToDecimal(formCollection["cost"].ToString());
+            insertar.full_name = formCollection["full_name"];
+            insertar.id_number = formCollection["id_number"];
+            insertar.rank_level = formCollection["rank_level"];
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertSanction";
+            string url = $"https://localhost:44388/rest/api/insertTrafficOfficer";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -94,32 +97,31 @@ namespace app_Multas_Online.Controllers
             restByte = webClient.UploadData(request.Address.ToString(), "post", reqString);
             resultJson = Encoding.UTF8.GetString(restByte);
 
-            responseSanction result = new responseSanction();
-            result = JsonConvert.DeserializeObject<responseSanction>(resultJson);
+            responseTrafficOfficer result = new responseTrafficOfficer();
+            result = JsonConvert.DeserializeObject<responseTrafficOfficer>(resultJson);
             webClient.Dispose();
 
             if (result.response == 1)
-                return RedirectToAction("Sancion", "Sancion");
-            return RedirectToAction("newSanction", "Sancion");  
+                return RedirectToAction("Agente", "Agente");
+            return RedirectToAction("newOfficer", "Agente");
 
 
+         
         }
 
-        public ActionResult ActualizarSancion(string sanction_id)
+        public ActionResult ActualizarAgente(string officer_id)
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getSanctionById?sanction_id=" + sanction_id;
-       
+            var url = $"https://localhost:44388/rest/api/getTrafficOfficerById?officer_id=" + officer_id;
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.ContentType = "application/json";  // también corriges el typo aquí
+            request.ContentType = "application/json";
             request.Accept = "application/json";
             string responseBody;
 
-
-
-            try
+             try
             {
                 using (WebResponse response = request.GetResponse())
                 {
@@ -128,7 +130,7 @@ namespace app_Multas_Online.Controllers
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             responseBody = objReader.ReadToEnd();
-                           
+
                         }
                     }
                     var jObj = JObject.Parse(responseBody);
@@ -143,20 +145,23 @@ namespace app_Multas_Online.Controllers
             }
 
             return View(dsi);
-        }
+            }
+
+        // POST: TrafficOfficer/Actualizar
+        [HttpPost]
         public ActionResult Actualizar(FormCollection formCollection)
         {
+            requestTrafficOfficer insertar = new requestTrafficOfficer();
+
             string json, resultJson;
             byte[] reqString, restByte;
-            requestSanction insertar = new requestSanction();
-            insertar.sanction_id = formCollection["sanction_id"];
-            insertar.description = formCollection["description"];
-            insertar.sanction_type = formCollection["sanction_type"];
-            insertar.cost = Convert.ToDecimal(formCollection["cost"].ToString());
+            insertar.full_name = formCollection["full_name"];
+            insertar.id_number = formCollection["id_number"];
+            insertar.rank_level = formCollection["rank_level"];
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateSanction";
+            string url = $"https://localhost:44388/rest/api/updateTrafficOfficer";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -168,22 +173,24 @@ namespace app_Multas_Online.Controllers
             result = JsonConvert.DeserializeObject<responseSanction>(resultJson);
             webClient.Dispose();
             if (result.response == 1)
-                return RedirectToAction("Sancion", "Sancion");
-            return RedirectToAction("ActualizarSancion", "Sancion", new { sanction_id = formCollection["sanction_id"] });
+                return RedirectToAction("Agente", "Agente");
+            return RedirectToAction("ActualizarAgente", "Agente", new { officer_id = formCollection["officer_id"] });
         }
 
-        public ActionResult eliminar(string sanction_id)
+
+
+        // GET: TrafficOfficer/Eliminar/{officer_id}
+        public ActionResult Eliminar(string officer_id)
         {
             string json, resultJson;
             byte[] reqString, restByte;
-          
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteSanction";
+            string url = $"https://localhost:44388/rest/api/deleteTrafficOfficer";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
-            requestDeleteSanction eliminar = new requestDeleteSanction();
-            eliminar.sanction_id = sanction_id;
+            requestDeleteTrafficOfficer eliminar = new requestDeleteTrafficOfficer();
+            eliminar.officer_id = officer_id;
 
             json = JsonConvert.SerializeObject(eliminar);
 
@@ -199,8 +206,9 @@ namespace app_Multas_Online.Controllers
             result = JsonConvert.DeserializeObject<responseSanction>(resultJson);
             webClient.Dispose();
 
-            return RedirectToAction("Sancion", "Sancion");
+            return RedirectToAction("Agente", "Agente");
+
+            
         }
     }
 }
-

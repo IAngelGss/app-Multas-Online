@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "Conductor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-success">Conductor</h2>
+
+<form method="post" action="@Url.Action("Conductor", "Conductor")">
+    <div class="card border-success mb-3">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-cent   er">
+            <div>
+                <label class="form-label me-2">Conductores</label>
+                <input type="text" id="driver_id" name="driver_id" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Conductor" />
+                <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                <button onclick="location.href = '@Url.Action("Conductor", "Conductor")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+
+
+            </div>
+            <button onclick="location.href = '@Url.Action("newDriver","Conductor")'; return false;" class="btn btn-outline-light">Nuevo</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID Conductor</th>
+                        <th>Nombre Conductor</th>
+                        <th>DPI Conductor</th>
+                        <th>Dirección</th>
+                        <th>Teléfono</th>
+                        <th>Licencia No.</th>
+                        <th>Fecha de Registro</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tables.Count > 0)
+                    {
+                        if (Model.Tables[0].Rows.Count > 0)
+                        {
+                            for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                            {
+                                <tr>
+                                    <td>@Model.Tables[0].Rows[x]["driver_id"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["full_name"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["id_number"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["address"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["phone"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["license_number"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["registration_date"].ToString()</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm"
+                                                onclick="location.href = '@Url.Action("ActualizarConductor","Conductor", new {driver_id = Model.Tables[0].Rows[x]["driver_id"].ToString()})'; return false;">
+                                            Actualizar
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="location.href = '@Url.Action("Eliminar","Conductor", new {driver_id = Model.Tables[0].Rows[x]["driver_id"].ToString()})'; return false;">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+
+

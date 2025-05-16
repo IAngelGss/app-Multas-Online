@@ -120,11 +120,16 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\agenteController.cs" />
+    <Compile Include="Controllers\conductorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\sancionController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\csEsctructuraConductor.cs" />
+    <Compile Include="Models\csEstructuraAgente.cs" />
+    <Compile Include="Models\csEstructuraSancion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +152,9 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="js\jsOfficer.js" />
+    <Content Include="js\jsDriver.js" />
+    <Content Include="js\jsSanction.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -179,10 +187,17 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\sancion\Sancion.cshtml" />
+    <Content Include="Views\sancion\newSanction.cshtml" />
+    <Content Include="Views\sancion\ActualizarSancion.cshtml" />
+    <Content Include="Views\conductor\Conductor.cshtml" />
+    <Content Include="Views\conductor\newDriver.cshtml" />
+    <Content Include="Views\conductor\ActualizarConductor.cshtml" />
+    <Content Include="Views\trafficOfficer\Agente.cshtml" />
+    <Content Include="Views\trafficOfficer\ActualizarAgente.cshtml" />
+    <Content Include="Views\trafficOfficer\newOfficer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

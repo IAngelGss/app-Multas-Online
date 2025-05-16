@@ -1,56 +1,67 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Sancion";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Sanciones</h2>
+<h2 class="text-success">Sanciones</h2>
 
 <form method="post" action="@Url.Action("Sancion", "Sancion")">
- 
-    <div class=" panel panel_primary">
-        <div class="panel-heading">
-            <label> Sanciones&nbsp; </label>
-            <input type="text" id="idSanction" placeholder="Buscar por ID Sancion" style="color:black" />
-            <button type="submit" style=" color:black" class="btn btn-default">Buscar </button>
-            <button class="btn btn-success">Nuevo</button>
+    <div class="card border-success mb-3">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <div>
+                <label class="form-label me-2">Sanciones</label>
+                <input type="text" id="idSanction" name="idSanction" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Sancion" />
+                <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                <button onclick="location.href = '@Url.Action("Sancion", "Sancion")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+
+
+            </div>
+            <button onclick="location.href = '@Url.Action("newSanction","Sancion")'; return false;" class="btn btn-outline-light">Nuevo</button>
         </div>
-        <table class=" table-responsive" border="1" style=" color:black">
-            <thead>
-                <tr>
-                    <td><b>sanction_id</b></td>
-                    <td><b>description</b></td>
-                    <td><b>sanction_type</b></td>
-                    <td><b>cost</b></td>
-                    <td><b>created_at</b></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Tables.Count > 0)
-                {
-                    if (Model.Tables[0].Rows.Count > 0)
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID Sanción</th>
+                        <th>Descripción</th>
+                        <th>Tipo de Sanción</th>
+                        <th>Precio</th>
+                        <th>Fecha de Creación</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tables.Count > 0)
                     {
-                        for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                        if (Model.Tables[0].Rows.Count > 0)
                         {
-                            <tr aling ="center">
-                                <td class=" active">@Model.Tables[0].Rows[x]["sanction_id"].Tostring()</td>
-                                <td class=" active">@Model.Tables[0].Rows[x]["description"].Tostring()</td>
-                                <td class=" active">@Model.Tables[0].Rows[x]["sanction_type"].Tostring()</td>
-                                <td class=" active">@Model.Tables[0].Rows[x]["cost"].Tostring()</td>
-                                <td class=" active">@Model.Tables[0].Rows[x]["created_at"].Tostring()</td>
-                                <td> <button type="button" class="btn btn-warning">Actualizar</button></td>
-                                <td> <button type="button" class="btn btn-danger">Eliminar</button></td>
-                            </tr>
-}
-
+                            for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                            {
+                                <tr>
+                                    <td>@Model.Tables[0].Rows[x]["sanction_id"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["description"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["sanction_type"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["cost"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["created_at"].ToString()</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm"
+                                                onclick="location.href = '@Url.Action("ActualizarSancion","Sancion", new {sanction_id = Model.Tables[0].Rows[x]["sanction_id"].ToString()})'; return false;">
+                                            Actualizar
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="location.href = '@Url.Action("Eliminar","Sancion", new {sanction_id = Model.Tables[0].Rows[x]["sanction_id"].ToString()})'; return false;">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
                     }
-                }
-
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </form>
-

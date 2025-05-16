@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "newDriver";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/Conductor/Guardar" method="post" onsubmit="return validarGuardadoConductor();">
+    <div class="card border-success mb-3 mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Nuevo Conductor</h5>
+            <button onclick="location.href = '@Url.Action("Conductor", "Conductor")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+        </div>
+
+        <div class="card-body bg-light">
+
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Nombre del Conductor</label>
+                <input type="text" required class="form-control" id="full_name" name="full_name" />
+            </div>
+
+            <div class="mb-3">
+                <label for="id_number" class="form-label">DPI del Conductor</label>
+                <input type="text" required class="form-control" id="id_number" name="id_number" />
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Dirección</label>
+                <input type="text" required class="form-control" id="address" name="address" />
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input type="text" required class="form-control" id="phone" name="phone" />
+            </div>
+
+            <div class="mb-3">
+                <label for="license_number" class="form-label">Licencia No.</label>
+                <input type="text" required class="form-control" id="license_number" name="license_number" />
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success" onsubmit="validarGuardadoConductor();">Guardar</button>
+            </div>
+        </div>
+    </div>
+</form>

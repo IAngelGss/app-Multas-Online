@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "ActualizarConductor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/Conductor/Actualizar" method="post">
+    <div class="card border-success mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Actualizar Conductor</h5>
+            <button onclick="location.href = '@Url.Action("Conductor", "Conductor")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+        </div>
+
+        <div class="card-body bg-light">
+            <div class="mb-3">
+                <label for="driver_id" class="form-label">Código del Conductor</label>
+                <input value="@Model.Tables[0].Rows[0]["driver_id"].ToString()" type="text" class="form-control" disabled />
+                <input type="hidden" name="driver_id" value="@Model.Tables[0].Rows[0]["driver_id"].ToString()" />
+            </div>
+
+            <div class="mb-3">
+                <label for="full_name" class="form-label">Nombre Completo</label>
+                <input value="@Model.Tables[0].Rows[0]["full_name"].ToString()" type="text" class="form-control" id="full_name" name="full_name" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="id_number" class="form-label">Número de Identificación</label>
+                <input value="@Model.Tables[0].Rows[0]["id_number"].ToString()" type="text" class="form-control" id="id_number" name="id_number" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Dirección</label>
+                <input value="@Model.Tables[0].Rows[0]["address"].ToString()" type="text" class="form-control" id="address" name="address" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="phone" class="form-label">Teléfono</label>
+                <input value="@Model.Tables[0].Rows[0]["phone"].ToString()" type="text" class="form-control" id="phone" name="phone" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="license_number" class="form-label">Número de Licencia</label>
+                <input value="@Model.Tables[0].Rows[0]["license_number"].ToString()" type="text" class="form-control" id="license_number" name="license_number" required />
+            </div>
+            <div class="mb-3">
+                <label for="created_at" class="form-label">Fecha del Registro</label>
+                <input value="@Model.Tables[0].Rows[0]["registration_date"].ToString()" type="text" class="form-control" disabled />
+                <input type="hidden" name="registration_date" value="@Model.Tables[0].Rows[0]["registration_date"].ToString()" />
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success" onclick="vaidarGuardadoConductor();">Guardar</button>
+            </div>
+        </div>
+        </div>
+</form>

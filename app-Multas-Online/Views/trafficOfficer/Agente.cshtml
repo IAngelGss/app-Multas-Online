@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Agente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-success">Agentes de Tráfico</h2>
+
+<form method="post" action="@Url.Action("Agente", "Agente")">
+    <div class="card border-success mb-3">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <div>
+                <label class="form-label me-2">Agentes de Tránsito</label>
+                <input type="text" id="idSanction" name="idSanction" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Agente" />
+                <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                <button onclick="location.href = '@Url.Action("Agente", "Agente")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+
+
+            </div>
+            <button onclick="location.href = '@Url.Action("newOfficer","Agente")'; return false;" class="btn btn-outline-light">Nuevo</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID Agente</th>
+                        <th>Nombre Completo</th>
+                        <th>Cédula</th>
+                        <th>Rango</th>
+                        <th>Fecha Creación</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tables.Count > 0)
+                    {
+                        if (Model.Tables[0].Rows.Count > 0)
+                        {
+                            for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                            {
+                                <tr>
+                                    <td>@Model.Tables[0].Rows[i]["officer_id"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[i]["full_name"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[i]["id_number"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[i]["rank_level"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[i]["created_at"].ToString()</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm"
+                                                onclick="location.href = '@Url.Action("ActualizarAgente","Agente", new {officer_id = Model.Tables[0].Rows[x]["officer_id"].ToString()})'; return false;">
+                                            Actualizar
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="location.href = '@Url.Action("Eliminar","Agente", new {officer_id = Model.Tables[0].Rows[x]["officer_id"].ToString()})'; return false;">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>

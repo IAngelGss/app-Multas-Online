@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "newSanction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/Sancion/Guardar" method="post">
+    <div class="card border-success mb-3 mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Nueva Sanción</h5>
+            <button onclick="location.href = '@Url.Action("Sancion", "Sancion")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+        </div>
+
+        <div class="card-body bg-light">
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Descripción de la Sanción</label>
+                <input type="text" required class="form-control" id="description" name="description" />
+            </div>
+
+            <div class="mb-3">
+                <label for="sanction_type" class="form-label">Tipo de la Sanción</label>
+                <input type="text" required class="form-control" id="sanction_type" name="sanction_type" />
+            </div>
+
+            <div class="mb-3">
+                <label for="cost" class="form-label">Costo de la Sanción</label>
+                <input type="text" required class="form-control" id="cost" name="cost" />
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success" onsubmit="validarGuardado();">Guardar</button>
+            </div>
+        </div>
+    </div>
+</form>
