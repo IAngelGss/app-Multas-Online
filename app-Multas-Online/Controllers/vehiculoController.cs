@@ -7,39 +7,43 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Security.Policy;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using static app_Multas_Online.Models.csEstructuraAgente;
 using static app_Multas_Online.Models.csEstructuraSancion;
+using static app_Multas_Online.Models.csEstructuraVehiculo;
+
 
 namespace app_Multas_Online.Controllers
 {
-    public class agenteController : Controller
+    public class vehiculoController : Controller
     {
-        // GET: sancion
+        // GET: vehiculo
         public ActionResult Index()
         {
             return View();
         }
-        public ActionResult Agente(string officer_id)
+
+        public ActionResult Vehiculo(string vehicle_id)
         {
             DataSet dsi = new DataSet();
             var url = "";
-            if (officer_id == null)
-                url = $"https://localhost:44388/rest/api/getTrafficOfficers";
+            if (vehicle_id == null)
+                url = $"https://localhost:44388/rest/api/getVehicles";
             else
-                url = $"https://localhost:44388/rest/api/getTrafficOfficerById?officer_id=" + officer_id;
+                url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
 
+            // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
 
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.ContentType = "application/json";
+            request.ContentType = "application/json";  // también corriges el typo aquí
             request.Accept = "application/json";
             string responseBody;
+
+
 
             try
             {
@@ -66,28 +70,26 @@ namespace app_Multas_Online.Controllers
 
             return View(dsi);
         }
-
-        // GET: TrafficOfficer/New
-        public ActionResult newOfficer()
+        public ActionResult newVehiculo()
         {
             return View();
         }
 
-        // POST: TrafficOfficer/Guardar
         public ActionResult Guardar(FormCollection formCollection)
         {
-            
             string json, resultJson;
             byte[] reqString, restByte;
 
-            requestTrafficOfficer insertar = new requestTrafficOfficer();
-            insertar.full_name = formCollection["full_name"];
-            insertar.id_number = formCollection["id_number"];
-            insertar.rank_level = formCollection["rank_level"];
+            requestVehicle insertar = new requestVehicle();
+            insertar.license_plate = formCollection["license_plate"];
+            insertar.brand = formCollection["brand"];
+            insertar.model = formCollection["model"];
+            insertar.color = formCollection["color"];
+            insertar.vehicle_type = formCollection["vehicle_type"];
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertTrafficOfficer";
+            string url = $"https://localhost:44388/rest/api/insertVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -96,30 +98,32 @@ namespace app_Multas_Online.Controllers
             restByte = webClient.UploadData(request.Address.ToString(), "post", reqString);
             resultJson = Encoding.UTF8.GetString(restByte);
 
-            responseTrafficOfficer result = new responseTrafficOfficer();
-            result = JsonConvert.DeserializeObject<responseTrafficOfficer>(resultJson);
+            responseSanction result = new responseSanction();
+            result = JsonConvert.DeserializeObject<responseSanction>(resultJson);
             webClient.Dispose();
 
             if (result.response == 1)
-                return RedirectToAction("Agente", "Agente");
-            return RedirectToAction("newOfficer", "Agente");
+                return RedirectToAction("Vehiculo", "Vehiculo");
+            return RedirectToAction("newVehiculo", "Vehiculo");
 
-         
+
         }
 
-        public ActionResult ActualizarAgente(string officer_id)
+        public ActionResult ActualizarVehiculo(string vehicle_id)
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getTrafficOfficerById?officer_id=" + officer_id;
+            var url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
-            request.ContentType = "application/json";
+            request.ContentType = "application/json";  // también corriges el typo aquí
             request.Accept = "application/json";
             string responseBody;
 
-             try
+
+
+            try
             {
                 using (WebResponse response = request.GetResponse())
                 {
@@ -143,24 +147,22 @@ namespace app_Multas_Online.Controllers
             }
 
             return View(dsi);
-            }
-
-        // POST: TrafficOfficer/Actualizar
+        }
         public ActionResult Actualizar(FormCollection formCollection)
         {
-            requestTrafficOfficer insertar = new requestTrafficOfficer();
-
             string json, resultJson;
             byte[] reqString, restByte;
-
-            insertar.officer_id = formCollection["officer_id"];
-            insertar.full_name = formCollection["full_name"];
-            insertar.id_number = formCollection["id_number"];
-            insertar.rank_level = formCollection["rank_level"];
+            requestVehicle insertar = new requestVehicle();
+            insertar.vehicle_id = formCollection["sanction_id"];
+            insertar.license_plate = formCollection["license_plate"];
+            insertar.brand = formCollection["brand"];
+            insertar.model = formCollection["model"];
+            insertar.color = formCollection["color"];
+            insertar.vehicle_type = formCollection["vehicle_type"];
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateTrafficOfficer";
+            string url = $"https://localhost:44388/rest/api/updateVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -168,28 +170,26 @@ namespace app_Multas_Online.Controllers
             Debug.Write(json);
             restByte = webClient.UploadData(request.Address.ToString(), "post", reqString);
             resultJson = Encoding.UTF8.GetString(restByte);
-            responseTrafficOfficer result = new responseTrafficOfficer();
-            result = JsonConvert.DeserializeObject<responseTrafficOfficer>(resultJson);
+            responseVehicle result = new responseVehicle();
+            result = JsonConvert.DeserializeObject<responseVehicle>(resultJson);
             webClient.Dispose();
             if (result.response == 1)
-                return RedirectToAction("Agente", "Agente");
-            return RedirectToAction("ActualizarAgente", "Agente", new { officer_id = formCollection["officer_id"] });
+                return RedirectToAction("Vehiculo", "Vehiculo");
+            return RedirectToAction("ActualizarVehiculo", "Vehiculo", new { vehicle_id = formCollection["vehicle_id"] });
         }
 
-
-
-        // GET: TrafficOfficer/Eliminar/{officer_id}
-        public ActionResult Eliminar(string officer_id)
+        public ActionResult eliminar(string vehicle_id)
         {
             string json, resultJson;
             byte[] reqString, restByte;
 
+
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteTrafficOfficer";
+            string url = $"https://localhost:44388/rest/api/deleteVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
-            requestDeleteTrafficOfficer eliminar = new requestDeleteTrafficOfficer();
-            eliminar.officer_id = officer_id;
+            requestDeleteVehicle eliminar = new requestDeleteVehicle();
+            eliminar.vehicle_id = vehicle_id;
 
             json = JsonConvert.SerializeObject(eliminar);
 
@@ -200,14 +200,12 @@ namespace app_Multas_Online.Controllers
             restByte = webClient.UploadData(request.Address.ToString(), "delete", reqString);
             resultJson = Encoding.UTF8.GetString(restByte);
 
-            responseTrafficOfficer result = new responseTrafficOfficer();
+            responseVehicle result = new responseVehicle();
 
-            result = JsonConvert.DeserializeObject<responseTrafficOfficer>(resultJson);
+            result = JsonConvert.DeserializeObject<responseVehicle>(resultJson);
             webClient.Dispose();
 
-            return RedirectToAction("Agente", "trafficOfficer");
-
-            
+            return RedirectToAction("Vehiculo", "Vehiculo");
         }
     }
 }

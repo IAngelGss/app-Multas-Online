@@ -1,0 +1,72 @@
+﻿
+@{
+    ViewBag.Title = "Vehiculo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-success">Vehiculos</h2>
+
+<form method="post" action="@Url.Action("Vehiculo", "Vehiculo")">
+    <div class="card border-success mb-3">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <div>
+                <label class="form-label me-2">Vehiculos</label>
+                <input type="text" id="Vehiculos" name="Vehiculos" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Vehiculo" />
+                <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                <button onclick="location.href = '@Url.Action("Vehiculo", "Vehiculo")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+
+
+            </div>
+            <button onclick="location.href = '@Url.Action("newVehiculo","Vehiculo")'; return false;" class="btn btn-outline-light">Nuevo</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-success">
+                    <tr>
+                        <th>ID Vehiculo</th>
+                        <th>Placa del vehículo</th>
+                        <th>Tipo de Sanción</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Tipo de Vehiculo</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Tables.Count > 0)
+                    {
+                        if (Model.Tables[0].Rows.Count > 0)
+                        {
+                            for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
+                            {
+                                <tr>
+                                    <td>@Model.Tables[0].Rows[x]["vehicle_id"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["license_plate"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["brand"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["model"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["color"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["vehicle_type"].ToString()</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-sm"
+                                                onclick="location.href = '@Url.Action("ActualizarVehiculo","Vehiculo", new {vehicle_id = Model.Tables[0].Rows[x]["vehicle_id"].ToString()})'; return false;">
+                                            Actualizar
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm"
+                                                onclick="location.href = '@Url.Action("Eliminar","Vehiculo", new {vehicle_id = Model.Tables[0].Rows[x]["vehicle_id"].ToString()})'; return false;">
+                                            Eliminar
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</form>
+

@@ -11,7 +11,7 @@
         <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
             <div>
                 <label class="form-label me-2">Agentes de Tránsito</label>
-                <input type="text" id="idSanction" name="idSanction" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Agente" />
+                <input type="text" id="officer_id" name="officer_id" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Agente" />
                 <button type="submit" class="btn btn-light ms-2">Buscar</button>
                 <button onclick="location.href = '@Url.Action("Agente", "Agente")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
 
@@ -40,11 +40,11 @@
                             for (int x = 0; x < Model.Tables[0].Rows.Count; x++)
                             {
                                 <tr>
-                                    <td>@Model.Tables[0].Rows[i]["officer_id"].ToString()</td>
-                                    <td>@Model.Tables[0].Rows[i]["full_name"].ToString()</td>
-                                    <td>@Model.Tables[0].Rows[i]["id_number"].ToString()</td>
-                                    <td>@Model.Tables[0].Rows[i]["rank_level"].ToString()</td>
-                                    <td>@Model.Tables[0].Rows[i]["created_at"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["officer_id"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["full_name"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["id_number"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["rank_level"].ToString()</td>
+                                    <td>@Model.Tables[0].Rows[x]["created_at"].ToString()</td>
                                     <td>
                                         <button type="button" class="btn btn-warning btn-sm"
                                                 onclick="location.href = '@Url.Action("ActualizarAgente","Agente", new {officer_id = Model.Tables[0].Rows[x]["officer_id"].ToString()})'; return false;">

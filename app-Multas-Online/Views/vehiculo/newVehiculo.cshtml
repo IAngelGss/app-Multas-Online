@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "newVehiculo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form action="/Vehiculo/Guardar" method="post">
+    <div class="card border-success mb-3 mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Nuevo Vehiculo</h5>
+            <button onclick="location.href = '@Url.Action("Vehiculo", "Vehiculo")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+        </div>
+
+        <div class="card-body bg-light">
+
+            <div class="mb-3">
+                <label for="license_plate" class="form-label">Placa</label>
+                <input type="text" required class="form-control" id="license_plate" name="license_plate" />
+            </div>
+
+            <div class="mb-3">
+                <label for="brand" class="form-label">Marca</label>
+                <input type="text" required class="form-control" id="brand" name="brand" />
+            </div>
+            <div class="mb-3">
+                <label for="model" class="form-label">Modelo</label>
+                <input type="text" required class="form-control" id="model" name="model" />
+            </div>
+
+            <div class="mb-3">
+                <label for="color" class="form-label">Color</label>
+                <input type="text" required class="form-control" id="color" name="color" />
+            </div>
+
+            <div class="mb-3">
+                <label for="vehicle_type" class="form-label">Tipo de Vehiculo</label>
+                <input type="text" required class="form-control" id="vehicle_type" name="vehicle_type" />
+            </div>
+        </div>
+    </div>
+</form>

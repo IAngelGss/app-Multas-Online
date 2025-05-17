@@ -124,12 +124,14 @@
     <Compile Include="Controllers\conductorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\sancionController.cs" />
+    <Compile Include="Controllers\vehiculoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\csEsctructuraConductor.cs" />
     <Compile Include="Models\csEstructuraAgente.cs" />
     <Compile Include="Models\csEstructuraSancion.cs" />
+    <Compile Include="Models\csEsctructuraVehiculo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +157,7 @@
     <Content Include="js\jsOfficer.js" />
     <Content Include="js\jsDriver.js" />
     <Content Include="js\jsSanction.js" />
+    <Content Include="js\jsVehicle.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -192,9 +195,12 @@
     <Content Include="Views\conductor\Conductor.cshtml" />
     <Content Include="Views\conductor\newDriver.cshtml" />
     <Content Include="Views\conductor\ActualizarConductor.cshtml" />
-    <Content Include="Views\trafficOfficer\Agente.cshtml" />
-    <Content Include="Views\trafficOfficer\ActualizarAgente.cshtml" />
-    <Content Include="Views\trafficOfficer\newOfficer.cshtml" />
+    <Content Include="Views\agente\Agente.cshtml" />
+    <Content Include="Views\agente\ActualizarAgente.cshtml" />
+    <Content Include="Views\agente\newOfficer.cshtml" />
+    <Content Include="Views\vehiculo\newVehiculo.cshtml" />
+    <Content Include="Views\vehiculo\ActualizarVehiculo.cshtml" />
+    <Content Include="Views\vehiculo\Vehiculo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
