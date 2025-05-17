@@ -23,14 +23,14 @@ namespace app_Multas_Online.Controllers
             return View();
         }
 
-        public ActionResult Conductor(string idConductor)
+        public ActionResult Conductor(string driver_id)
         {
             DataSet dsi = new DataSet();
             var url = "";
-            if (idConductor == null)
+            if (driver_id == null)
                 url = $"https://localhost:44388/rest/api/getDrivers";
             else
-                url = $"https://localhost:44388/rest/api/getDriverById?driver_id=" + idConductor;
+                url = $"https://localhost:44388/rest/api/getDriverById?driver_id=" + driver_id;
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
