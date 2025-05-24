@@ -60,6 +60,12 @@
                                             Eliminar
                                         </button>
                                     </td>
+                                    <td>
+                                        <button type="button" class="btn btn-success btn-sm"
+                                                onclick="location.href = '@Url.Action("ExportarViolacionPDF","Vehiculo", new { vehicle_id = Model.Tables[0].Rows[x]["vehicle_id"].ToString() })'; return false;">
+                                            Generar Reporte
+                                        </button>
+                                    </td>
                                 </tr>
                             }
                         }

@@ -1,5 +1,8 @@
-﻿using iTextSharp.text.pdf;
-using iTextSharp.text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -14,26 +17,32 @@ using System.Web;
 using System.Web.Mvc;
 using static app_Multas_Online.Models.csEstructuraSancion;
 using static app_Multas_Online.Models.csEstructuraVehiculo;
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using static app_Multas_Online.Models.csEstructuraViolacion;
+
+
 
 
 namespace app_Multas_Online.Controllers
 {
-    public class vehiculoController : Controller
+    public class violacionController : Controller
     {
-        // GET: vehiculo
+        // GET: violacion
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult Vehiculo(string vehicle_id)
+
+        public ActionResult Violacion(string violation_id)
         {
             DataSet dsi = new DataSet();
             var url = "";
-            if (vehicle_id == null)
-                url = $"https://localhost:44388/rest/api/getVehicles";
+            if (violation_id == null)
+                url = $"https://localhost:44388/rest/api/getViolations";
             else
-                url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
+                url = $"https://localhost:44388/rest/api/getViolationById?violation_id=" + violation_id;
 
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
@@ -44,6 +53,8 @@ namespace app_Multas_Online.Controllers
             request.ContentType = "application/json";  // también corriges el typo aquí
             request.Accept = "application/json";
             string responseBody;
+
+            Debug.WriteLine(url);
 
 
 
@@ -56,13 +67,68 @@ namespace app_Multas_Online.Controllers
                         using (StreamReader objReader = new StreamReader(strReader))
                         {
                             responseBody = objReader.ReadToEnd();
+                            Debug.WriteLine(responseBody);
+                            JArray jsonArray = JArray.Parse(responseBody);
 
+                            DataTable dt = new DataTable();
+                            dt.Columns.Add("violation_id");
+                            dt.Columns.Add("violation_date");
+                            dt.Columns.Add("status_infraction");
+
+                            dt.Columns.Add("license_plate");
+                            dt.Columns.Add("brand");
+                            dt.Columns.Add("model");
+                            dt.Columns.Add("color");
+                            dt.Columns.Add("vehicle_type");
+
+                            dt.Columns.Add("driver_name");
+                            dt.Columns.Add("driver_id_number");
+                            dt.Columns.Add("driver_address");
+                            dt.Columns.Add("driver_phone");
+                            dt.Columns.Add("driver_license_number");
+
+                            dt.Columns.Add("officer_name");
+                            dt.Columns.Add("officer_id_number");
+                            dt.Columns.Add("officer_rank");
+
+                            dt.Columns.Add("sanction_description");
+                            dt.Columns.Add("sanction_type");
+                            dt.Columns.Add("sanction_cost");
+
+                            foreach (var item in jsonArray)
+                            {
+                                var row = dt.NewRow();
+
+                                row["violation_id"] = item["violation_id"]?.ToString();
+                                row["violation_date"] = item["violation_date"]?.ToString();
+                                row["status_infraction"] = item["status_infraction"]?.ToString();
+
+                                row["license_plate"] = item["vehicle"]?["license_plate"]?.ToString();
+                                row["brand"] = item["vehicle"]?["brand"]?.ToString();
+                                row["model"] = item["vehicle"]?["model"]?.ToString();
+                                row["color"] = item["vehicle"]?["color"]?.ToString();
+                                row["vehicle_type"] = item["vehicle"]?["vehicle_type"]?.ToString();
+
+                                row["driver_name"] = item["driver"]?["full_name"]?.ToString();
+                                row["driver_id_number"] = item["driver"]?["id_number"]?.ToString();
+                                row["driver_address"] = item["driver"]?["address"]?.ToString();
+                                row["driver_phone"] = item["driver"]?["phone"]?.ToString();
+                                row["driver_license_number"] = item["driver"]?["license_number"]?.ToString();
+
+                                row["officer_name"] = item["officer"]?["full_name"]?.ToString();
+                                row["officer_id_number"] = item["officer"]?["id_number"]?.ToString();
+                                row["officer_rank"] = item["officer"]?["rank_level"]?.ToString();
+
+                                row["sanction_description"] = item["sanction"]?["description"]?.ToString();
+                                row["sanction_type"] = item["sanction"]?["sanction_type"]?.ToString();
+                                row["sanction_cost"] = item["sanction"]?["cost"]?.ToString();
+
+                                dt.Rows.Add(row);
+                            }
+
+                            dsi.Tables.Add(dt);
                         }
                     }
-                    var jObj = JObject.Parse(responseBody);
-                    var tableJson = jObj["Table"].ToString();
-
-                    dsi = JsonConvert.DeserializeObject<DataSet>("{\"Table\":" + tableJson + "}");
                 }
             }
             catch (Exception ex)
@@ -79,36 +145,45 @@ namespace app_Multas_Online.Controllers
 
         public ActionResult Guardar(FormCollection formCollection)
         {
-            string json, resultJson;
-            byte[] reqString, restByte;
+            var violacion = new
+            {
+                vehicle_id = formCollection["vehicle_id"], // ID Vehículo
+                driver_id = formCollection["driver_id"], // Placa
+                officer_id = formCollection["officer_id"], // Marca
+                sanction = new
+                {
+                    description = formCollection["description"], // Descripción Sanción
+                    sanction_type = formCollection["sanction_type"], // Tipo Sanción
+                    cost = formCollection["cost"] // Costo Sanción
+                }
+            };
 
-            requestVehicle insertar = new requestVehicle();
-            insertar.license_plate = formCollection["license_plate"];
-            insertar.brand = formCollection["brand"];
-            insertar.model = formCollection["model"];
-            insertar.color = formCollection["color"];
-            insertar.vehicle_type = formCollection["vehicle_type"];
-            json = JsonConvert.SerializeObject(insertar);
+            string json = JsonConvert.SerializeObject(violacion); // Convertir a JSON
+            Debug.WriteLine(json);
+            // Realizar la solicitud HTTP al servicio de la API
+            using (var webClient = new WebClient())
+            {
+                string url = "https://localhost:44388/rest/api/insertViolation"; // API de Violación
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                webClient.Headers["Content-Type"] = "application/json";
+                byte[] reqString = Encoding.UTF8.GetBytes(json); // Convertir a bytes
+                byte[] restByte = webClient.UploadData(request.Address.ToString(), "POST", reqString); // Realizar la solicitud POST
+                string resultJson = Encoding.UTF8.GetString(restByte); // Obtener la respuesta
 
-            WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertVehicle";
-            var request = (HttpWebRequest)WebRequest.Create(url);
+                // Deserializar la respuesta
+                var result = JsonConvert.DeserializeObject<responseViolation>(resultJson);
 
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-            webClient.Headers["content-type"] = "application/json";
-            reqString = Encoding.UTF8.GetBytes(json);
-            restByte = webClient.UploadData(request.Address.ToString(), "post", reqString);
-            resultJson = Encoding.UTF8.GetString(restByte);
-
-            responseSanction result = new responseSanction();
-            result = JsonConvert.DeserializeObject<responseSanction>(resultJson);
-            webClient.Dispose();
-
-            if (result.response == 1)
-                return RedirectToAction("Vehiculo", "Vehiculo");
-            return RedirectToAction("newVehiculo", "Vehiculo");
-
-
+                // Verificar el resultado
+                if (result.response == 1)
+                {
+                    return RedirectToAction("Violacion", "Violacion"); // Si se guarda correctamente, redirigir a la lista de violaciones
+                }
+                else
+                {
+                    return RedirectToAction("newViolacion", "Violacion"); // Si hay un error, regresar al formulario
+                }
+            }
         }
 
         public ActionResult ActualizarVehiculo(string vehicle_id)
@@ -217,7 +292,7 @@ namespace app_Multas_Online.Controllers
             if (string.IsNullOrEmpty(violation_id))
                 url = $"https://localhost:44388/rest/api/getViolations";
             else
-                url = $"https://localhost:44388/rest/api/getViolationsByVehicleId?vehicle_id=" + violation_id;
+                url = $"https://localhost:44388/rest/api/getViolationById?violation_id=" + violation_id;
 
             try
             {
@@ -301,9 +376,10 @@ namespace app_Multas_Online.Controllers
             return dsi;
         }
 
-        public ActionResult ExportarViolacionPDF(string vehicle_id)
+        public ActionResult ExportarViolacionPDF(string violation_id)
         {
-            DataSet dsi = ObtenerDatosViolacion(vehicle_id);
+
+            DataSet dsi = ObtenerDatosViolacion(violation_id);
             if (dsi.Tables.Count == 0 || dsi.Tables[0].Rows.Count == 0)
                 return new HttpStatusCodeResult(404, "No se encontraron datos");
 
@@ -318,6 +394,16 @@ namespace app_Multas_Online.Controllers
                 var sectionFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12);
                 var labelFont = FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10);
                 var valueFont = FontFactory.GetFont(FontFactory.HELVETICA, 10);
+
+                // Título principal
+                Paragraph title = new Paragraph("Reporte de Infracción de Tránsito", titleFont)
+                {
+                    Alignment = Element.ALIGN_CENTER,
+                    SpacingAfter = 20f
+                };
+                document.Add(title);
+
+                DataRow row = dsi.Tables[0].Rows[0]; // solo uno si es por ID
 
                 // Función auxiliar para crear tabla de secciones
                 PdfPTable CrearTablaSeccion(Dictionary<string, string> data)
@@ -339,77 +425,65 @@ namespace app_Multas_Online.Controllers
                     return table;
                 }
 
-                // Iterar sobre cada infracción
-                for (int i = 0; i < dsi.Tables[0].Rows.Count; i++)
-                {
-                    if (i > 0) document.NewPage(); // Agrega nueva página excepto en la primera
+                // 1. Datos de la infracción
+                document.Add(new Paragraph("Datos de la Infracción", sectionFont));
+                document.Add(CrearTablaSeccion(new Dictionary<string, string>
+        {
+            { "ID Infracción", row["violation_id"]?.ToString() },
+            { "Fecha", row["violation_date"]?.ToString() },
+            { "Estado", row["status_infraction"]?.ToString() }
+        }));
 
-                    DataRow row = dsi.Tables[0].Rows[i];
+                // 2. Datos del Vehículo
+                document.Add(new Paragraph("Datos del Vehículo", sectionFont));
+                document.Add(CrearTablaSeccion(new Dictionary<string, string>
+        {
+            { "Placa", row["license_plate"]?.ToString() },
+            { "Marca", row["brand"]?.ToString() },
+            { "Modelo", row["model"]?.ToString() },
+            { "Color", row["color"]?.ToString() },
+            { "Tipo", row["vehicle_type"]?.ToString() }
+        }));
 
-                    // Título principal
-                    Paragraph title = new Paragraph("Reporte de Infracción de Tránsito", titleFont)
-                    {
-                        Alignment = Element.ALIGN_CENTER,
-                        SpacingAfter = 20f
-                    };
-                    document.Add(title);
+                // 3. Datos del Conductor
+                document.Add(new Paragraph("Datos del Conductor", sectionFont));
+                document.Add(CrearTablaSeccion(new Dictionary<string, string>
+        {
+            { "Nombre", row["driver_name"]?.ToString() },
+            { "Cédula", row["driver_id_number"]?.ToString() },
+            { "Dirección", row["driver_address"]?.ToString() },
+            { "Teléfono", row["driver_phone"]?.ToString() },
+            { "Licencia de Conducir", row["driver_license_number"]?.ToString() }
+        }));
 
-                    // 1. Datos de la Infracción
-                    document.Add(new Paragraph("Datos de la Infracción", sectionFont));
-                    document.Add(CrearTablaSeccion(new Dictionary<string, string>
-            {
-                { "ID Infracción", row["violation_id"]?.ToString() },
-                { "Fecha", row["violation_date"]?.ToString() },
-                { "Estado", row["status_infraction"]?.ToString() }
-            }));
+                // 4. Datos del Oficial
+                document.Add(new Paragraph("Datos del Oficial", sectionFont));
+                document.Add(CrearTablaSeccion(new Dictionary<string, string>
+        {
+            { "Nombre", row["officer_name"]?.ToString() },
+            { "Cédula", row["officer_id_number"]?.ToString() },
+            { "Rango", row["officer_rank"]?.ToString() }
+        }));
 
-                    // 2. Datos del Vehículo
-                    document.Add(new Paragraph("Datos del Vehículo", sectionFont));
-                    document.Add(CrearTablaSeccion(new Dictionary<string, string>
-            {
-                { "Placa", row["license_plate"]?.ToString() },
-                { "Marca", row["brand"]?.ToString() },
-                { "Modelo", row["model"]?.ToString() },
-                { "Color", row["color"]?.ToString() },
-                { "Tipo", row["vehicle_type"]?.ToString() }
-            }));
-
-                    // 3. Datos del Conductor
-                    document.Add(new Paragraph("Datos del Conductor", sectionFont));
-                    document.Add(CrearTablaSeccion(new Dictionary<string, string>
-            {
-                { "Nombre", row["driver_name"]?.ToString() },
-                { "Cédula", row["driver_id_number"]?.ToString() },
-                { "Dirección", row["driver_address"]?.ToString() },
-                { "Teléfono", row["driver_phone"]?.ToString() },
-                { "Licencia de Conducir", row["driver_license_number"]?.ToString() }
-            }));
-
-                    // 4. Datos del Oficial
-                    document.Add(new Paragraph("Datos del Oficial", sectionFont));
-                    document.Add(CrearTablaSeccion(new Dictionary<string, string>
-            {
-                { "Nombre", row["officer_name"]?.ToString() },
-                { "Cédula", row["officer_id_number"]?.ToString() },
-                { "Rango", row["officer_rank"]?.ToString() }
-            }));
-
-                    // 5. Datos de la Sanción
-                    document.Add(new Paragraph("Datos de la Sanción", sectionFont));
-                    document.Add(CrearTablaSeccion(new Dictionary<string, string>
-            {
-                { "Descripción", row["sanction_description"]?.ToString() },
-                { "Tipo", row["sanction_type"]?.ToString() },
-                { "Costo", "$" + row["sanction_cost"]?.ToString() }
-            }));
-                }
+                // 5. Sanción
+                document.Add(new Paragraph("Datos de la Sanción", sectionFont));
+                document.Add(CrearTablaSeccion(new Dictionary<string, string>
+        {
+            { "Descripción", row["sanction_description"]?.ToString() },
+            { "Tipo", row["sanction_type"]?.ToString() },
+            { "Costo", "$" + row["sanction_cost"]?.ToString() }
+        }));
 
                 document.Close();
+
                 byte[] bytes = ms.ToArray();
-                return File(bytes, "application/pdf", "ReporteViolaciones.pdf");
+                return File(bytes, "application/pdf", "ReporteViolacion.pdf");
             }
         }
 
-
+        public ActionResult newViolation()
+        {
+            return View();
+        }
     }
 }

@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "newViolation";
+}
+
+@{
+    ViewBag.Title = "Nueva Violación";
+}
+
+<form action="/Violacion/Guardar" method="post">
+    <div class="card border-success mb-3 mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Registrar Nueva Violación</h5>
+            <button onclick="location.href = '@Url.Action("Violacion", "Violacion")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+        </div>
+
+        <div class="card-body bg-light">
+            <!-- Información del Vehículo -->
+            <h5 class="text-success">Datos Vehiculo</h5>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="vehicle_id" class="form-label">ID Vehiculo</label>
+                    <input type="text" id="vehicle_id" name="vehicle_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Vehiculo" />
+                    <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                    @*<button onclick="location.href = '@Url.Action("Vehiculo", "Vehiculo")'; return false;"</button>*@
+                </div>
+
+            <!-- Información del Conductor -->
+            <h5 class="text-success">Datos Conductor</h5>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="driver_id" class="form-label">ID Conductor</label>
+                    <input type="text" id="driver_id" name="driver_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Conductor" />
+                    <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                </div>
+
+            </div>
+
+            <!-- Información del Oficial -->
+            <h5 class="text-success">Datos del Oficial</h5>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="officer_id" class="form-label">ID Agente</label>
+                    <input type="text" id="officer_id" name="officer_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Agente" />
+                </div>
+            </div>
+
+            <!-- Sanción -->
+            <h5 class="text-success">Datos de la Sanción</h5>
+            <div class="mb-3">
+                <label for="description" class="form-label">Descripción de la Sanción</label>
+                <textarea required class="form-control" id="description" name="description"></textarea>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label for="sanction_type" class="form-label">Tipo de Sanción</label>
+                    <input type="text" required class="form-control" id="sanction_type" name="sanction_type" />
+                </div>
+                <div class="col">
+                    <label for="cost" class="form-label">Costo</label>
+                    <input type="number" step="0.01" required class="form-control" id="cost" name="cost" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success">Guardar Violación</button>
+        </div>
+    </div>
+</form>
+

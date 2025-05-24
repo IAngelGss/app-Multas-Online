@@ -1,0 +1,103 @@
+﻿@{
+    ViewBag.Title = "Violacion";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2 class="text-success">Infracciones</h2>
+
+<form method="post" action="@Url.Action("Violacion", "Violacion")">
+    <div class="card border-success mb-3">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <div>
+                <label class="form-label me-2">Violacions</label>
+                <input type="text" id="violation_id" name="violation_id" class="form-control d-inline-block w-auto" placeholder="Buscar por ID Violacion" />
+                <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                <button onclick="location.href = '@Url.Action("Violacion", "Violacion")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
+
+
+            </div>
+            <button onclick="location.href = '@Url.Action("newViolation","Violacion")'; return false;" class="btn btn-outline-light">Nuevo</button>
+        </div>
+
+        <h2>Listado de Infracciones Globales</h2>
+
+        @if (Model.Tables.Count > 0 && Model.Tables[0].Rows.Count > 0)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Acciones</th>
+                            <th>ID Infraccion</th>
+                            <th>Fecha Infraccion</th>
+                            <th>Estado</th>
+
+                            <th>Placa</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Color</th>
+                            <th>Tipo Vehículo</th>
+
+                            <th>Conductor</th>
+                            <th>Cédula Conductor</th>
+                            <th>Dirección Conductor</th>
+                            <th>Teléfono Conductor</th>
+                            <th>Licencia Conductor</th>
+
+                            <th>Oficial</th>
+                            <th>ID Oficial</th>
+                            <th>Rango</th>
+
+                            <th>Descripción Sanción</th>
+                            <th>Tipo Sanción</th>
+                            <th>Costo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow row in Model.Tables[0].Rows)
+                        {
+                            <tr>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm"
+                                            onclick="location.href = '@Url.Action("ExportarViolacionPDF","Violacion", new { violation_id = @row["violation_id"] })'; return false;">
+                                        Generar Reporte
+                                    </button>
+                                </td>
+                                <td>@row["violation_id"]</td>
+                                <td>@Convert.ToDateTime(row["violation_date"]).ToString("dd/MM/yyyy")</td>
+                                <td>@row["status_infraction"]</td>
+
+                                <td>@row["license_plate"]</td>
+                                <td>@row["brand"]</td>
+                                <td>@row["model"]</td>
+                                <td>@row["color"]</td>
+                                <td>@row["vehicle_type"]</td>
+
+                                <td>@row["driver_name"]</td>
+                                <td>@row["driver_id_number"]</td>
+                                <td>@row["driver_address"]</td>
+                                <td>@row["driver_phone"]</td>
+                                <td>@row["driver_license_number"]</td>
+
+                                <td>@row["officer_name"]</td>
+                                <td>@row["officer_id_number"]</td>
+                                <td>@row["officer_rank"]</td>
+
+                                <td>@row["sanction_description"]</td>
+                                <td>@row["sanction_type"]</td>
+                                <td>@String.Format("{0:C}", row["sanction_cost"])</td>
+                            </tr>
+                            
+                    }
+                        </tbody>
+                    </table>
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">No hay violaciones registradas.</div>
+        }
+    </div>
+</form>
+
