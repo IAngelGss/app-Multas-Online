@@ -40,9 +40,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (violation_id == null)
-                url = $"https://localhost:44388/rest/api/getViolations";
+                url = $"http://localhost/api-multas/rest/api/getViolations";
             else
-                url = $"https://localhost:44388/rest/api/getViolationById?violation_id=" + violation_id;
+                url = $"http://localhost/api-multas/rest/api/getViolationById?violation_id=" + violation_id;
 
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
@@ -138,11 +138,7 @@ namespace app_Multas_Online.Controllers
 
             return View(dsi);
         }
-        public ActionResult newVehiculo()
-        {
-            return View();
-        }
-
+     
         public ActionResult Guardar(FormCollection formCollection)
         {
             var violacion = new
@@ -163,7 +159,7 @@ namespace app_Multas_Online.Controllers
             // Realizar la solicitud HTTP al servicio de la API
             using (var webClient = new WebClient())
             {
-                string url = "https://localhost:44388/rest/api/insertViolation"; // API de Violación
+                string url = "http://localhost/api-multas/rest/api/insertViolation"; // API de Violación
                 var request = (HttpWebRequest)WebRequest.Create(url);
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 webClient.Headers["Content-Type"] = "application/json";
@@ -190,7 +186,7 @@ namespace app_Multas_Online.Controllers
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
+            var url = $"http://localhost/api-multas/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -239,7 +235,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateVehicle";
+            string url = $"http://localhost/api-multas/rest/api/updateVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -262,7 +258,7 @@ namespace app_Multas_Online.Controllers
 
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteVehicle";
+            string url = $"http://localhost/api-multas/rest/api/deleteVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             requestDeleteVehicle eliminar = new requestDeleteVehicle();
@@ -290,9 +286,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (string.IsNullOrEmpty(violation_id))
-                url = $"https://localhost:44388/rest/api/getViolations";
+                url = $"http://localhost/api-multas/rest/api/getViolations";
             else
-                url = $"https://localhost:44388/rest/api/getViolationById?violation_id=" + violation_id;
+                url = $"http://localhost/api-multas/rest/api/getViolationById?violation_id=" + violation_id;
 
             try
             {
@@ -485,5 +481,131 @@ namespace app_Multas_Online.Controllers
         {
             return View();
         }
+        
+        [HttpGet]
+        public JsonResult BuscarConductores(string term)
+        {
+            var url = "http://localhost/api-multas/rest/api/getDrivers";
+            var resultados = new List<object>();
+
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var json = reader.ReadToEnd();
+                    JObject jsonObject = JObject.Parse(json);
+                    JArray jsonArray = (JArray)jsonObject["Table"];
+
+                    foreach (var item in jsonArray)
+                    {
+                        string id = item["driver_id"]?.ToString();
+                        string nombre = item["full_name"]?.ToString();
+                        string dpi = item["number_id"]?.ToString();
+
+                        if (!string.IsNullOrEmpty(term) && nombre.IndexOf(term, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            resultados.Add(new { label = dpi + " " + nombre, value = id });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Manejo de errores
+            }
+
+            return Json(resultados, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult BuscarVehiculos(string term)
+        {
+            var url = "http://localhost/api-multas/rest/api/getVehicles";
+            var resultados = new List<object>();
+
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var json = reader.ReadToEnd();
+                    JObject jsonObject = JObject.Parse(json);
+                    JArray jsonArray = (JArray)jsonObject["Table"];
+
+                    foreach (var item in jsonArray)
+                    {
+                        string id = item["vehicle_id"]?.ToString();
+                        string placa = item["license_plate"]?.ToString();
+                        string brand = item["brand"]?.ToString();
+                        string color = item["color"]?.ToString();
+                        if (!string.IsNullOrEmpty(term) && placa.IndexOf(term, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            resultados.Add(new { label = placa + " " + brand + " " + color, value = id });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Manejo de errores
+            }
+
+            return Json(resultados, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult BuscarOficiales(string term)
+        {
+            var url = "http://localhost/api-multas/rest/api/getTrafficOfficers";
+            var resultados = new List<object>();
+
+            try
+            {
+                var request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                request.ContentType = "application/json";
+                request.Accept = "application/json";
+
+                using (var response = request.GetResponse())
+                using (var stream = response.GetResponseStream())
+                using (var reader = new StreamReader(stream))
+                {
+                    var json = reader.ReadToEnd();
+                    JObject jsonObject = JObject.Parse(json);
+                    JArray jsonArray = (JArray)jsonObject["Table"];
+
+                    foreach (var item in jsonArray)
+                    {
+                        string id = item["officer_id"]?.ToString();
+                        string nombre = item["full_name"]?.ToString();
+                        string id_number = item["id_number"]?.ToString();
+
+                        if (!string.IsNullOrEmpty(term) && nombre.IndexOf(term, System.StringComparison.OrdinalIgnoreCase) >= 0)
+                        {
+                            resultados.Add(new { label = id_number + "  " + nombre, value = id });
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Manejo de errores
+            }
+
+            return Json(resultados, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

@@ -28,9 +28,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (driver_id == null)
-                url = $"https://localhost:44388/rest/api/getDrivers";
+                url = $"http://localhost/api-multas/rest/api/getDrivers";
             else
-                url = $"https://localhost:44388/rest/api/getDriverById?driver_id=" + driver_id;
+                url = $"http://localhost/api-multas/rest/api/getDriverById?driver_id=" + driver_id;
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
@@ -82,7 +82,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertDriver";
+            string url = $"http://localhost/api-multas/rest/api/insertDriver";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -103,7 +103,7 @@ namespace app_Multas_Online.Controllers
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getDriverById?driver_id=" + driver_id;
+            var url = $"http://localhost/api-multas/rest/api/getDriverById?driver_id=" + driver_id;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -152,7 +152,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateDriver";
+            string url = $"http://localhost/api-multas/rest/api/updateDriver";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -175,7 +175,7 @@ namespace app_Multas_Online.Controllers
 
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteDriver";
+            string url = $"http://localhost/api-multas/rest/api/deleteDriver";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             requestDeleteDriver eliminar = new requestDeleteDriver();

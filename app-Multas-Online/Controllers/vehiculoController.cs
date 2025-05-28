@@ -31,9 +31,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (vehicle_id == null)
-                url = $"https://localhost:44388/rest/api/getVehicles";
+                url = $"http://localhost/api-multas/rest/api/getVehicles";
             else
-                url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
+                url = $"http://localhost/api-multas/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
 
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
@@ -91,7 +91,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertVehicle";
+            string url = $"http://localhost/api-multas/rest/api/insertVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -115,7 +115,7 @@ namespace app_Multas_Online.Controllers
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
+            var url = $"http://localhost/api-multas/rest/api/getVehicleById?vehicle_id=" + vehicle_id;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -164,7 +164,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateVehicle";
+            string url = $"http://localhost/api-multas/rest/api/updateVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -187,7 +187,7 @@ namespace app_Multas_Online.Controllers
 
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteVehicle";
+            string url = $"http://localhost/api-multas/rest/api/deleteVehicle";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             requestDeleteVehicle eliminar = new requestDeleteVehicle();
@@ -215,9 +215,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (string.IsNullOrEmpty(violation_id))
-                url = $"https://localhost:44388/rest/api/getViolations";
+                url = $"http://localhost/api-multas/rest/api/getViolations";
             else
-                url = $"https://localhost:44388/rest/api/getViolationsByVehicleId?vehicle_id=" + violation_id;
+                url = $"http://localhost/api-multas/rest/api/getViolationsByVehicleId?vehicle_id=" + violation_id;
 
             try
             {

@@ -1,76 +1,83 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@ViewBag.Title - Multas Online</title>
     @Styles.Render("~/Content/css")
+    <style>
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        .navbar {
+            background: #222 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+        }
+
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+            .nav-link.active, .nav-link:focus, .nav-link:hover {
+                color: #0dcaf0 !important;
+            }
+
+        .navbar-nav {
+            gap: 1rem;
+        }
+
+
+        footer {
+            text-align: center;
+            color: #888;
+            font-size: 0.95em;
+            margin-top: 32px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 32px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
+    <nav class="navbar navbar-expand-sm navbar-dark">
+        <div class="container d-flex justify-content-between align-items-center">
             @Html.ActionLink("Multas Online", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Alternar navegación">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Sancion", "Sancion", "Sancion", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Conductor", "Conductor", "Conductor", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Agente", "Agente", "Agente", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Vehiculo", "Vehiculo", "Vehiculo", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
-            </div>
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Alternar navegación" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Violacion", "Violacion", "Violacion", new { area = "" }, new { @class = "nav-link" })</li>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav ms-auto flex-row">
+                    <li class="nav-item">@Html.ActionLink("Sanciones", "Sancion", "Sancion", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Conductores", "Conductor", "Conductor", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Agentes", "Agente", "Agente", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Vehiculos", "Vehiculo", "Vehiculo", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Infracción", "Violacion", "Violacion", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
             </div>
         </div>
     </nav>
-    <div class="container body-content">
+    <div class="container">
         @RenderBody()
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Multas Online</p>
         </footer>
     </div>
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-    <script src="~/js/jsSanction.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
+    @RenderSection("scripts", required: false)
 </body>
 </html>

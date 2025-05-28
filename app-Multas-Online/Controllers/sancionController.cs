@@ -27,9 +27,9 @@ namespace app_Multas_Online.Controllers
             DataSet dsi = new DataSet();
             var url = "";
             if (idSanction == null)
-                url = $"https://localhost:44388/rest/api/getSanctions";
+                url = $"http://localhost/api-multas/rest/api/getSanctions";
             else
-                url = $"https://localhost:44388/rest/api/getSanctionById?sanction_id=" + idSanction;
+                url = $"http://localhost/api-multas/rest/api/getSanctionById?sanction_id=" + idSanction;
 
             // Enviar la URL al navegador para mostrarla en la consola
             ViewBag.ApiUrl = url;
@@ -85,7 +85,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/insertSanction";
+            string url = $"http://localhost/api-multas/rest/api/insertSanction";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -109,7 +109,7 @@ namespace app_Multas_Online.Controllers
         {
             DataSet dsi = new DataSet();
 
-            var url = $"https://localhost:44388/rest/api/getSanctionById?sanction_id=" + sanction_id;
+            var url = $"http://localhost/api-multas/rest/api/getSanctionById?sanction_id=" + sanction_id;
        
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
             request.Method = "GET";
@@ -156,7 +156,7 @@ namespace app_Multas_Online.Controllers
             json = JsonConvert.SerializeObject(insertar);
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/updateSanction";
+            string url = $"http://localhost/api-multas/rest/api/updateSanction";
             var request = (HttpWebRequest)WebRequest.Create(url);
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             webClient.Headers["content-type"] = "application/json";
@@ -179,7 +179,7 @@ namespace app_Multas_Online.Controllers
           
 
             WebClient webClient = new WebClient();
-            string url = $"https://localhost:44388/rest/api/deleteSanction";
+            string url = $"http://localhost/api-multas/rest/api/deleteSanction";
             var request = (HttpWebRequest)WebRequest.Create(url);
 
             requestDeleteSanction eliminar = new requestDeleteSanction();

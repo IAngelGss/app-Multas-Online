@@ -1,9 +1,4 @@
-﻿
-@{
-    ViewBag.Title = "newViolation";
-}
-
-@{
+﻿@{
     ViewBag.Title = "Nueva Violación";
 }
 
@@ -14,34 +9,38 @@
             <button onclick="location.href = '@Url.Action("Violacion", "Violacion")'; return false;" class="btn btn-outline-light btn-sm">Regresar</button>
         </div>
 
+   
+
         <div class="card-body bg-light">
-            <!-- Información del Vehículo -->
-            <h5 class="text-success">Datos Vehiculo</h5>
+            <!-- Información del Infractor -->
+            <h5 class="text-success">Datos del Vehiculo</h5>
             <div class="row mb-3">
                 <div class="col">
-                    <label for="vehicle_id" class="form-label">ID Vehiculo</label>
-                    <input type="text" id="vehicle_id" name="vehicle_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Vehiculo" />
-                    <button type="submit" class="btn btn-light ms-2">Buscar</button>
-                    @*<button onclick="location.href = '@Url.Action("Vehiculo", "Vehiculo")'; return false;"</button>*@
+                    <label for="vehicle_plate" class="form-label">Placa del Vehiculo</label>
+                    <input type="text" id="vehicle_plate" name="VehiculoPlaca" class="form-control" placeholder="Escriba la placa del  vehiculo" autocomplete="off" />
+                    <input type="hidden" id="vehicle_id" name="vehicle_id" />
                 </div>
+            </div>
 
             <!-- Información del Conductor -->
             <h5 class="text-success">Datos Conductor</h5>
             <div class="row mb-3">
                 <div class="col">
-                    <label for="driver_id" class="form-label">ID Conductor</label>
-                    <input type="text" id="driver_id" name="driver_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Conductor" />
-                    <button type="submit" class="btn btn-light ms-2">Buscar</button>
+                    <label for="conductor" class="form-label">Nombre del Conductor</label>
+                    <input type="text" id="conductor" name="ConductorNombre" class="form-control" placeholder="Escriba el nombre del conductor" autocomplete="off" />
+                    <input type="hidden" id="driver_id" name="driver_id" />
                 </div>
-
             </div>
 
+
+
             <!-- Información del Oficial -->
-            <h5 class="text-success">Datos del Oficial</h5>
+            <h5 class="text-success">Datos del Oficial de Transito</h5>
             <div class="row mb-3">
                 <div class="col">
-                    <label for="officer_id" class="form-label">ID Agente</label>
-                    <input type="text" id="officer_id" name="officer_id" class="form-control d-inline-block w-auto" placeholder="Buscar ID Agente" />
+                    <label for="officer" class="form-label">Nombre del Oficial</label>
+                    <input type="text" id="officer" name="OfficerNombre" class="form-control" placeholder="Escriba el nombre del Oficial" autocomplete="off" />
+                    <input type="hidden" id="officer_id" name="officer_id" />
                 </div>
             </div>
 
@@ -67,3 +66,45 @@
     </div>
 </form>
 
+@section scripts {
+    <script>
+       $(function () {
+        // Autocomplete Conductor
+        $("#conductor").autocomplete({
+            source: '@Url.Action("BuscarConductores", "Violacion")',
+            minLength: 2,
+
+            select: function (event, ui) {
+                console.log("Conductor seleccionado:", ui.item);
+                $("#conductor").val(ui.item.label);
+                $("#driver_id").val(ui.item.value);
+                return false;
+            }
+        });
+
+        // Autocomplete Vehículo
+        $("#vehicle_plate").autocomplete({
+            source: '@Url.Action("BuscarVehiculos", "Violacion")',
+            minLength: 2,
+            select: function (event, ui) {
+                console.log("Conductor seleccionado:", ui.item);
+                $("#vehicle_plate").val(ui.item.label);
+                $("#vehicle_id").val(ui.item.value);
+                return false;
+            }
+        });
+
+        // Autocomplete Infractor
+        $("#officer").autocomplete({
+            source: '@Url.Action("BuscarOficiales", "Violacion")',
+            minLength: 2,
+            select: function (event, ui) {
+                console.log("Conductor seleccionado:", ui.item);
+                $("#officer").val(ui.item.label);
+                $("#officer_id").val(ui.item.value);
+                return false;
+            }
+        });
+    });
+    </script>
+}
