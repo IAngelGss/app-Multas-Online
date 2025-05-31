@@ -10,6 +10,9 @@ namespace app_Multas_Online.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["Usuario"] == null)
+                return RedirectToAction("Login", "Login");
+
             return View();
         }
 

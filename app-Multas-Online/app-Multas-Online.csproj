@@ -129,6 +129,7 @@
     <Compile Include="Controllers\agenteController.cs" />
     <Compile Include="Controllers\conductorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\loginController.cs" />
     <Compile Include="Controllers\sancionController.cs" />
     <Compile Include="Controllers\vehiculoController.cs" />
     <Compile Include="Controllers\violacionController.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Models\csEstructuraSancion.cs" />
     <Compile Include="Models\csEsctructuraVehiculo.cs" />
     <Compile Include="Models\csEstructuraViolacion.cs" />
+    <Compile Include="Models\csUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -211,6 +213,7 @@
     <Content Include="Views\vehiculo\Vehiculo.cshtml" />
     <Content Include="Views\violacion\Violacion.cshtml" />
     <Content Include="Views\violacion\newViolation.cshtml" />
+    <Content Include="Views\login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

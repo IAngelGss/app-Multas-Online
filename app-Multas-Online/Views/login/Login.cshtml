@@ -1,0 +1,26 @@
+﻿@model app_Multas_Online.Models.csUsuario
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Iniciar Sesión</h2>
+
+@using (Html.BeginForm("Login", "login", FormMethod.Post))
+{
+    <div class="form-group">
+        <label>Usuario</label>
+        @Html.TextBoxFor(m => m.username, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        <label>Contraseña</label>
+        @Html.PasswordFor(m => m.password_hash, new { @class = "form-control" })
+    </div>
+    <br />
+    <button type="submit" class="btn btn-success">Ingresar</button>
+}
+
+@if (ViewBag.Mensaje != null)
+{
+    <p class="text-danger">@ViewBag.Mensaje</p>
+}
